@@ -1,0 +1,54 @@
+<script type="text/html" data-help-name="kafka-producer">
+    <p>Get a connection for the message to be used in following nodes</p>
+    <p>On successfully getting connection message sent OK out otherwise send to failed connector</p>
+</script>
+
+<script type="text/html" data-template-name="kafka-producer">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name </label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    
+    <div class="form-row">
+    	<label for="node-input-broker"><i class="fa fa-list-ul"></i> Broker </label>
+    	<input type="text" id="node-input-broker">
+  	</div>
+
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tag"></i> Topic </label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('kafka-producer',{
+    	category: 'kafka',
+        defaults: {
+            name: {value:"",required:false},
+            broker: {type:"kafka-broker"},
+            topic: {value:"",required:true}
+        },
+	    inputs:1,
+        inputLabels: "",
+        outputs:0,
+        outputLabels: [],
+        icon: "publish.png",
+        allign: "right",
+        label: function() {
+            return this.name||this._("kafka-producer");
+        },
+        labelStyle: function() {
+            return "node_label_italic";
+        },
+        oneditprepare: function() {
+
+        },
+        oneditsave: function() {
+
+        },
+        oneditresize: function(size) {
+
+        }
+});
+</script>

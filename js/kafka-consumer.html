@@ -1,0 +1,51 @@
+<script type="text/html" data-help-name="kafka-consumer">
+    <p>A simple node that converts the message payloads into all lower-case characters</p>
+</script>
+
+<script type="text/html" data-template-name="kafka-consumer">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    
+    <div class="form-row">
+    	<label for="node-input-broker"><i class="fa fa-list-ul"></i> Broker </label>
+    	<input type="text" id="node-input-broker">
+  	</div>
+
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tag"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('kafka-consumer',{
+        category: 'kafka',
+        defaults: {
+            name: {value:""},
+            broker: {type:"kafka-broker"},
+            topic: {value:"",required:true},
+        },
+        inputs:0,
+        outputs:1,
+        align: "left",
+        icon: "publish.png",
+        label: function() {
+            return this.name||this._("kafka-consumer");
+        },
+        labelStyle: function() {
+            return "node_label_italic";
+        },
+        oneditprepare: function() {
+
+        },
+        oneditsave: function() {
+
+        },
+        oneditresize: function(size) {
+
+        }
+    });
+</script>

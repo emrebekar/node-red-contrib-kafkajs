@@ -1,0 +1,13 @@
+{
+    "name": "node-red-contrib-kafka",
+    "node-red": {
+        "nodes": {
+            "kafka-consumer": "./js/kafka-consumer.js",
+            "kafka-producer": "./js/kafka-producer.js",
+            "kafka-broker": "./js/kafka-broker.js"
+        }
+    },
+    "dependencies": {
+        "kafkajs": "^1.12.0"
+    }
+}
