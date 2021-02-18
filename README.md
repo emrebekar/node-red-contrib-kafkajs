@@ -6,7 +6,11 @@ This node can be used in order to produce and consume messages to Kafka. It is h
 - kafka-producer
 - kafka-consumer
 
-Further details can be found in https://kafka.js.org/docs/
+Further details can be found in following pages:
+
+Client Configuration: https://kafka.js.org/docs/configuration
+Consuming Messages: https://kafka.js.org/docs/consuming
+Producing Messages: https://kafka.js.org/docs/producing
 
 ## Input Parameters
 ### kafkajs-client
@@ -77,7 +81,7 @@ npm install node-red-contrib-kafkajs
 ```
 ## Screenshots
 
-![kafkajs-client](https://raw.githubusercontent.com/emrebekar/node-red-contrib-kafkajs/master/images/kafka-broker.PNG)
+![kafkajs-client](https://raw.githubusercontent.com/emrebekar/node-red-contrib-kafkajs/master/images/kafka-client.PNG)
 
 ![kafkajs-consumer](https://raw.githubusercontent.com/emrebekar/node-red-contrib-kafkajs/master/images/kafka-consumer.PNG)
 
