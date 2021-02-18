@@ -8,9 +8,9 @@ This node can be used in order to produce and consume messages to Kafka. It is h
 
 Further details can be found in following pages:
 
-Client Configuration: https://kafka.js.org/docs/configuration
-Consuming Messages: https://kafka.js.org/docs/consuming
-Producing Messages: https://kafka.js.org/docs/producing
+- Client Configuration: https://kafka.js.org/docs/configuration
+- Consuming Messages: https://kafka.js.org/docs/consuming
+- Producing Messages: https://kafka.js.org/docs/producing
 
 ## Input Parameters
 ### kafkajs-client
