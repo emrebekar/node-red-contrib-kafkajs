@@ -1,33 +1,72 @@
-<script type="text/html" data-help-name="kafka-producer">
+<script type="text/html" data-help-name="kafkajs-producer">
     <p>Get a connection for the message to be used in following nodes</p>
     <p>On successfully getting connection message sent OK out otherwise send to failed connector</p>
 </script>
 
-<script type="text/html" data-template-name="kafka-producer">
+<script type="text/html" data-template-name="kafkajs-producer">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name </label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    
     <div class="form-row">
-    	<label for="node-input-broker"><i class="fa fa-list-ul"></i> Broker </label>
-    	<input type="text" id="node-input-broker">
+    	<label for="node-input-client"><i class="fa fa-plug"></i> Client</label>
+    	<input type="text" id="node-input-client">
   	</div>
-
     <div class="form-row">
-        <label for="node-input-topic"><i class="fa fa-tag"></i> Topic </label>
+        <label for="node-input-topic"><i class="fa fa-link"></i> Topic</label>
         <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-advancedoptions" style="display: inline-block; width: auto; vertical-align: top;"><i class="fa  fa-cogs"></i> Advanced Options</label>
+		<input id="node-input-advancedoptions" type="checkbox" style="width:30%">
+    </div>
+    <div id="node-advancedoptions" class="form-row">
+        <div class="form-row">
+            <label for="node-input-acknowledge"><i class="fa fa-check-square "></i> Acks</label>
+            <select id="node-input-acknowledge">            
+                <option value="all">ALL</option>
+                <option value="none">NONE</option>
+                <option value="leader">LEADER</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-partition"><i class="fa fa-hdd-o"></i> Partition</label>
+            <input id="node-input-partition" type="number">
+        </div>
+        <div class="form-row">
+            <label for="node-input-responsetimeout"><i class="fa fa-clock-o"></i> Response Timeout</label>
+            <input id="node-input-responsetimeout" type="number">
+        </div>
+        <div class="form-row">
+            <label for="node-input-transactiontimeout"><i class="fa fa-clock-o"></i> Transaction Timout</label>
+            <input id="node-input-transactiontimeout" type="number">
+        </div>
+        <div class="form-row">
+            <label for="node-input-metadatamaxage"><i class="fa fa-clock-o"></i> Metadata Max Age</label>
+            <input id="node-input-metadatamaxage" type="number">
+        </div>
+        <div class="form-row">
+            <label for="node-input-allowautotopiccreation"><i class="fa fa-tag"></i> Allow Auto Topic Creation</label>
+            <input type="checkbox" id="node-input-allowautotopiccreation">
+        </div>
     </div>
 
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('kafka-producer',{
+    RED.nodes.registerType('kafkajs-producer',{
     	category: 'kafka',
         defaults: {
             name: {value:"",required:false},
-            broker: {type:"kafka-broker"},
-            topic: {value:"",required:true}
+            client: {type:"kafkajs-client"},
+            topic: {value:"",required:false},
+            advancedoptions: {value: false, require:false},
+            acknowledge: {value: "all", require:false},
+            partition: {required:false},
+            responsetimeout: {value: 30000, required:false},
+            transactiontimeout: {value: 60000, required:false},
+            metadatamaxage: {value: 300000, required:false},
+            allowautotopiccreation: {value: false, require:false}
         },
 	    inputs:1,
         inputLabels: "",
@@ -36,13 +75,25 @@
         icon: "publish.png",
         allign: "right",
         label: function() {
-            return this.name||this._("kafka-producer");
+            return this.name||this._("kafkajs-producer");
         },
         labelStyle: function() {
             return "node_label_italic";
         },
         oneditprepare: function() {
+            function checkAdvancedOptions(checked){
+				if(checked){
+					$("#node-advancedoptions").show();
+				}
+				else{
+					$("#node-advancedoptions").hide();
+				}
+            }
 
+            checkAdvancedOptions($("#node-input-advancedoptions").val());
+            $('#node-input-advancedoptions').change(function(){
+				checkAdvancedOptions($(this).is(':checked'));
+            })
         },
         oneditsave: function() {
 

@@ -1,0 +1,203 @@
+<script type="text/html" data-help-name="kafkajs-client">
+    <p>Definition of kafkajs-client </p>
+    <p>"Hosts process.env name" can contain a process.env property name that contained hosts as JSON string,e.g.</p>
+    <textarea>process.env.atesthosts='[{"host":"atesthost1","port":1234},{"host":"atesthost2","port":4321}]';</textarea>
+    <p>Note, minimal data quality checks performed.</p>
+</script>
+
+<script type="text/html" data-template-name="kafkajs-client">
+
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input id="node-config-input-name" type="text" placeholder="Name"">
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-brokers"><i class="fa fa-server"></i> Brokers</label>
+        <input id="node-config-input-brokers" type="text" placeholder="example1.com:9092,example2.com:9092,..." >
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-clientid"><i class="fa fa-id-card-o"></i> Client ID</label>
+        <input id="node-config-input-clientid" type="text" placeholder="Client ID" >
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-connectiontimeout"><i class="fa fa-clock-o"></i> Connection Timeout</label>
+		<input id="node-config-input-connectiontimeout" type="number" step="1" min="1">
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-requesttimeout"><i class="fa fa-clock-o"></i> Request Timeout</label>
+		<input id="node-config-input-requesttimeout" type="number" step="1" min="1">
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-loglevel"><i class="fa fa-file-text-o"></i> Log Level</label>
+        <select id="node-config-input-loglevel">            
+			<option value="error">ERROR</option>
+			<option value="warn">WARN</option>
+			<option value="info">INFO</option>
+			<option value="debug">DEBUG</option>
+			<option value="nothing">NOTHING</option>
+		</select>
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-auth"><i class="fa fa-file-text-o"></i> Auth</label>
+        <select id="node-config-input-auth">            
+			<option value="none">NONE</option>
+			<option value="tls">TLS</option>
+			<option value="saslplain">SASL/PLAIN</option>
+		</select>
+	</div>
+	<div id="node-config-tls" class="form-row" style="margin-left:30px">
+
+		<div class="form-row">
+			<label for="node-config-input-tlscacert"><i class="fa fa-certificate"></i> CA Cert</label>
+			<input  id="node-config-input-tlscacert" type="text" placeholder="/var/..." >
+		</div>
+		
+		<div class="form-row">
+			<label for="node-config-input-tlsclientcert"><i class="fa fa-certificate"></i> Client Cert</label>
+			<input  id="node-config-input-tlsclientcert" type="text" placeholder="/var/..." >
+		</div>
+		
+		<div class="form-row">
+			<label for="node-config-input-tlsprivatekey"><i class="fa fa-tag"></i> Private Key</label>
+			<input  id="node-config-input-tlsprivatekey" type="text" placeholder="/var/..." >
+		</div>
+		
+		<div class="form-row">
+			<label for="node-config-input-tlspassphrase"><i class="fa fa-key"></i> Passphrase</label>
+			<input  id="node-config-input-tlspassphrase" type="password" placeholder="Passphrase" >
+		</div>
+
+		<div class="form-row">
+			<input type="checkbox" id="node-config-input-tlsselfsign" style="display: inline-block; width: auto; vertical-align: top;">
+			<label for="node-config-input-tlsselfsign" style="width: auto">Self Sign</label>
+		</div>
+	</div>
+	<div id="node-config-saslplain" class="form-row" style="margin-left:30px">
+		<div class="form-row">
+			<label for="node-config-input-saslplainusername"><i class="fa fa-id-card-o"></i> Username</label>
+			<input  id="node-config-input-saslplainusername" type="text" placeholder="Username" >
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-saslplainpassword"><i class="fa fa-key"></i> Password</label>
+			<input  id="node-config-input-saslplainpassword" type="password" placeholder="Password" >
+		</div>
+		<div class="form-row">
+			<input type="checkbox" id="node-config-input-saslplainssl" style="display: inline-block; width: auto; vertical-align: top;">
+			<label for="node-config-input-saslplainssl" style="width: auto">Use SSL</label>
+		</div>
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-advancedretry" style="display: inline-block; width: auto; vertical-align: top;"><i class="fa fa-clock-o"></i> Advanced Retry Options</label>
+		<input id="node-config-input-advancedretry" type="checkbox" style="width:30%">
+	</div>
+	<div id="node-config-advancedretry" class="form-row" style="margin-left:30px">
+		<div class="form-row">
+			<label for="node-config-input-requesttimeout"><i class="fa fa-clock-o"></i> Request Timeout</label>
+			<input id="node-config-input-requesttimeout" type="number" step="1" min="1">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-maxretrytime"><i class="fa fa-clock-o"></i> Max Retry Time</label>
+			<input id="node-config-input-maxretrytime" type="number" step="1" min="1">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-initialretrytime"><i class="fa fa-clock-o"></i> Initial Retry Time</label>
+			<input id="node-config-input-initialretrytime" type="number" step="1" min="1">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-factor"><i class="fa fa-calculator"></i> Factor</label>
+			<input id="node-config-input-factor" type="number" step="0.1" min="0">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-multiplier"><i class="fa fa-calculator"></i> Multiplier</label>
+			<input id="node-config-input-multiplier" type="number" step="1" min="1">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-retries"><i class="fa fa-refresh"></i> Retries</label>
+			<input id="node-config-input-retries" type="number" step="1" min="1">
+		</div>
+	</div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('kafkajs-client',{
+        category: 'config',
+        icon: "setting.png",
+        defaults: {
+        	name: {required:false},
+			brokers: {value: [], required: true},
+			clientid: {required: true},
+			connectiontimeout: {value: 3000, required: true},
+			requesttimeout: {value: 25000, required: true},
+			
+			advancedretry:{value: false, required:true},
+			maxretrytime: {value:30000, required: true},
+			initialretrytime: {value:300, required: true},
+			factor: {value:0.2, required: true},
+			multiplier: {value:2, required: true},
+			retries: {value:5, required: true},
+
+			auth: {value:"none", required:true},
+			
+			tlsselfsign: {value: false, required: false},
+			tlscacert: {required:false},
+			tlsclientcert: {required:false},
+			tlsprivatekey: {required:false},
+			tlspassphrase: {required:false},
+
+			saslplainssl: {value:true, required:false},
+
+			loglevel: {value:"error", required:true},
+		},
+		credentials: {
+			saslplainusername: { type: "text", required: false },
+			saslplainpassword: { type: "password", required: false }
+		},
+
+        label: function() {
+            return this.name||this._("kafkajs-client");
+		},
+		
+        labelStyle: function() {
+            return "node_label_italic";
+		},
+		
+  	    oneditprepare: function() {
+			function checkAdvancedRetry(checked){
+				if(checked){
+					$("#node-config-advancedretry").show();
+				}
+				else{
+					$("#node-config-advancedretry").hide();
+				}
+			}
+
+			function checkAuthMethod(val){
+				if(val == "tls"){
+					$("#node-config-saslplain").hide();
+					$("#node-config-tls").show();
+				}
+				else if(val == "saslplain"){
+					$("#node-config-tls").hide();
+					$("#node-config-saslplain").show();
+				}
+				else{
+					$("#node-config-saslplain").hide();
+					$("#node-config-tls").hide();
+				}
+			}
+
+			checkAuthMethod($("#node-config-input-auth").val());
+			checkAdvancedRetry($("#node-config-input-advancedretry").is(':checked'));
+			
+			$('#node-config-input-advancedretry').change(function(){
+				checkAdvancedRetry($(this).is(':checked'));
+			})
+
+			$("#node-config-input-auth").change(function(){
+				checkAuthMethod($(this).val());
+			});
+  		},
+  		oneditsave: function() {
+        }
+    });
+</script>
