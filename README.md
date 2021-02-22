@@ -1,6 +1,8 @@
 # node-red-contrib-kafkajs
 
-This node can be used in order to produce and consume messages to Kafka. It is highly depends on 'kafka-js' library. Consists three nodes.
+This node can be used in order to produce and consume messages to Kafka. It is highly depends on 'kafkajs' library. Consists three nodes.
+
+This node is an advanced alternative to https://github.com/emrebekar/node-red-contrib-kafka-client
 
 - kafka-client
 - kafka-producer
@@ -62,6 +64,15 @@ Client which is wanted to be connect
 Topic name of selected broker which is wanted to be consume
 #### Advanced Options
 Advanced options of Producer
+
+Some parameters can be send over kafka pipe.
+
+Notice: Parameters in Producer Node have to be null
+
+msg.key
+msg.topic
+msg.partition
+msg.headers
 
 ### kafkajs-consumer
 #### Name (Optional)

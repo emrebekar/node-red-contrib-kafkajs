@@ -13,10 +13,10 @@ module.exports = function(RED) {
         node.ready = false;
 
         let client = RED.nodes.getNode(config.client)
+
         let kafka = new Kafka(client.options)
 
         var producerOptions = new Object();
-
         var sendOptions = new Object();
         sendOptions.topic = config.topic;
 
@@ -24,11 +24,12 @@ module.exports = function(RED) {
             producerOptions.metadataMaxAge = config.metadatamaxage;
             producerOptions.allowAutoTopicCreation = config.allowautotopiccreation;
             producerOptions.transactionTimeout = config.transactiontimeout;
+            
+            sendOptions.partition = config.partition;
+            sendOptions.key = config.key;
 
-            if(config.partition){
-                sendOptions.partition = config.partition;
-            }
-
+            sendOptions.headers = config.headeritems;
+            
             sendOptions.acks = acksDict[config.acknowledge];
             sendOptions.timeout = config.responsetimeout;
         }
@@ -79,27 +80,26 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             if(node.ready){
                 var sendOptions = new Object();
-                sendOptions.topic = node.sendOptions.topic;
+                sendOptions.topic = node.sendOptions.topic || msg.topic;
                 sendOptions.acks = node.sendOptions.acks;
                 sendOptions.timeout = node.sendOptions.timeout;
 
                 sendOptions.messages = []
                 var message = new Object();
                 
-                message.key = msg.key;
+                if(node.sendOptions.key || msg.key){
+                    message.key = node.sendOptions.key || msg.key;
+                }
+
+                if(Object.keys(node.sendOptions.headers).length != 0 || msg.headers){
+                    message.headers =  Object.keys(node.sendOptions.headers).length != 0 ? node.sendOptions.headers : msg.headers;
+                }
+
+                if(node.sendOptions.partition || msg.partition){
+                    message.partition = node.sendOptions.partition || msg.partition;
+                }
+
                 message.value = msg.payload;
-
-                if(sendOptions.partitions){
-                    message.partition = node.sendOptions.partition;
-                }
-                
-                if(msg.partition){
-                    message.partition = msg.partition;
-                }
-
-                if(msg.headers){
-                    message.headers = msg.headers;
-                }
 
                 sendOptions.messages.push(message);
                 

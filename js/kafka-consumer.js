@@ -77,6 +77,10 @@ module.exports = function(RED) {
                 
                 payload.payload.key= message.key ? message.key.toString() : null;
                 payload.payload.value = message.value.toString();
+
+                for(const [key, value] of Object.entries(payload.payload.headers)){
+                    payload.payload.headers[key] = value.toString();
+                }
                 
                 node.send(payload);	
                 node.status({fill:"blue",shape:"ring",text:"Reading"});

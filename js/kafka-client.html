@@ -1,8 +1,6 @@
 <script type="text/html" data-help-name="kafkajs-client">
     <p>Definition of kafkajs-client </p>
-    <p>"Hosts process.env name" can contain a process.env property name that contained hosts as JSON string,e.g.</p>
-    <textarea>process.env.atesthosts='[{"host":"atesthost1","port":1234},{"host":"atesthost2","port":4321}]';</textarea>
-    <p>Note, minimal data quality checks performed.</p>
+	<p>Usage details can be found under https://github.com/emrebekar/node-red-contrib-kafkajs/blob/master/README.md</p>
 </script>
 
 <script type="text/html" data-template-name="kafkajs-client">
@@ -91,10 +89,6 @@
 		<input id="node-config-input-advancedretry" type="checkbox" style="width:30%">
 	</div>
 	<div id="node-config-advancedretry" class="form-row" style="margin-left:30px">
-		<div class="form-row">
-			<label for="node-config-input-requesttimeout"><i class="fa fa-clock-o"></i> Request Timeout</label>
-			<input id="node-config-input-requesttimeout" type="number" step="1" min="1">
-		</div>
 		<div class="form-row">
 			<label for="node-config-input-maxretrytime"><i class="fa fa-clock-o"></i> Max Retry Time</label>
 			<input id="node-config-input-maxretrytime" type="number" step="1" min="1">

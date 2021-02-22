@@ -1,6 +1,6 @@
 <script type="text/html" data-help-name="kafkajs-producer">
-    <p>Get a connection for the message to be used in following nodes</p>
-    <p>On successfully getting connection message sent OK out otherwise send to failed connector</p>
+    <p>Definition of kafkajs-producer </p>
+	<p>Usage details can be found under https://github.com/emrebekar/node-red-contrib-kafkajs/blob/master/README.md</p>
 </script>
 
 <script type="text/html" data-template-name="kafkajs-producer">
@@ -10,7 +10,7 @@
     </div>
     <div class="form-row">
     	<label for="node-input-client"><i class="fa fa-plug"></i> Client</label>
-    	<input type="text" id="node-input-client">
+    	<input id="node-input-client">
   	</div>
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-link"></i> Topic</label>
@@ -20,7 +20,7 @@
         <label for="node-input-advancedoptions" style="display: inline-block; width: auto; vertical-align: top;"><i class="fa  fa-cogs"></i> Advanced Options</label>
 		<input id="node-input-advancedoptions" type="checkbox" style="width:30%">
     </div>
-    <div id="node-advancedoptions" class="form-row">
+    <div id="node-advancedoptions" class="form-row" style="margin-left:30px">
         <div class="form-row">
             <label for="node-input-acknowledge"><i class="fa fa-check-square "></i> Acks</label>
             <select id="node-input-acknowledge">            
@@ -32,6 +32,14 @@
         <div class="form-row">
             <label for="node-input-partition"><i class="fa fa-hdd-o"></i> Partition</label>
             <input id="node-input-partition" type="number">
+        </div>
+        <div class="form-row">
+            <label for="node-input-headers"><i class="fa fa-header"></i> Headers</label>
+            <ol id="node-input-headers" style='min-height:120px;'></ol>
+        </div>
+        <div class="form-row">
+            <label for="node-input-key"><i class="fa fa-tag"></i> Key</label>
+            <input id="node-input-key" type="text">
         </div>
         <div class="form-row">
             <label for="node-input-responsetimeout"><i class="fa fa-clock-o"></i> Response Timeout</label>
@@ -62,7 +70,9 @@
             topic: {value:"",required:false},
             advancedoptions: {value: false, require:false},
             acknowledge: {value: "all", require:false},
-            partition: {required:false},
+            partition: {value: null, required:false},
+            headeritems: {value: {}},
+            key: {value: null, requeired:false},
             responsetimeout: {value: 30000, required:false},
             transactiontimeout: {value: 60000, required:false},
             metadatamaxage: {value: 300000, required:false},
@@ -90,13 +100,37 @@
 				}
             }
 
+            $('#node-input-headers').editableList({
+                addButton: 'add',
+                removable: true,
+                addItem: function(row, index, data) {
+                    let key = data[0]|| "";
+                    let value = data[1] || "";
+
+                    var root = $('<div/>', {style:"display:flex;"}).appendTo(row);
+
+                    $('<input/>',{class:"node-input-header-key",type:"text",style:"width:100%; margin-left:5px;"}).appendTo(root).val(key);
+                    $('<input/>',{class:"node-input-header-value",type:"text",style:"width:100%; margin-left:5px;"}).appendTo(root).val(value);
+                }
+            });
+
+            for (const entry of Object.entries(this.headeritems)) {
+                $("#node-input-headers").editableList('addItem', entry);
+            }
+            
             checkAdvancedOptions($("#node-input-advancedoptions").val());
             $('#node-input-advancedoptions').change(function(){
 				checkAdvancedOptions($(this).is(':checked'));
             })
         },
         oneditsave: function() {
+            var items = $("#node-input-headers").editableList('items');
+            var node = this;
 
+            this.headeritems = {};
+            items.each(function(i, val){
+                node.headeritems[val.find(".node-input-header-key").val()] = val.find(".node-input-header-value").val();
+            });
         },
         oneditresize: function(size) {
 
