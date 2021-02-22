@@ -16,6 +16,7 @@
     "license" :"Apache 2.0",
     "keywords": [
         "kafka",
-        "kafkajs"
+        "kafkajs",
+        "node-red"
     ]
 }
