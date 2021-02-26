@@ -6,7 +6,12 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         var node = this;
             
-        let client = RED.nodes.getNode(config.client);        
+        let client = RED.nodes.getNode(config.client);    
+        
+        if(!client){
+            return;
+        }
+
         const kafka = new Kafka(client.options)
         
         let consumerOptions = new Object();

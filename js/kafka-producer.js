@@ -12,32 +12,33 @@ module.exports = function(RED) {
         var node = this;
         node.ready = false;
 
-        let client = RED.nodes.getNode(config.client)
+        let client = RED.nodes.getNode(config.client);
 
-        let kafka = new Kafka(client.options)
+        let kafka = new Kafka(client.options);
+
+        if(!client){
+            return;
+        }
 
         var producerOptions = new Object();
         var sendOptions = new Object();
-        sendOptions.topic = config.topic;
+        sendOptions.topic = config.topic || null;
 
-        if(config.advancedoptions){
-            producerOptions.metadataMaxAge = config.metadatamaxage;
-            producerOptions.allowAutoTopicCreation = config.allowautotopiccreation;
-            producerOptions.transactionTimeout = config.transactiontimeout;
-            
-            sendOptions.partition = config.partition;
-            sendOptions.key = config.key;
-
-            sendOptions.headers = config.headeritems;
-            
-            sendOptions.acks = acksDict[config.acknowledge];
-            sendOptions.timeout = config.responsetimeout;
-        }
+        producerOptions.metadataMaxAge = config.metadatamaxage;
+        producerOptions.allowAutoTopicCreation = config.allowautotopiccreation;
+        producerOptions.transactionTimeout = config.transactiontimeout;
+        
+        sendOptions.partition = config.partition || null;
+        sendOptions.key = config.key || null;
+        sendOptions.headers = config.headeritems;
+        
+        sendOptions.acks = acksDict[config.acknowledge];
+        sendOptions.timeout = config.responsetimeout;
 
         node.sendOptions = sendOptions;
         
         node.init = async function init(){
-            const producer = kafka.producer()
+            const producer = kafka.producer();
             node.producer = producer;
 
             node.status({fill:"yellow",shape:"ring",text:"Initializing"});
@@ -79,37 +80,38 @@ module.exports = function(RED) {
 
         node.on('input', function(msg) {
             if(node.ready){
-                var sendOptions = new Object();
-                sendOptions.topic = node.sendOptions.topic || msg.topic;
-                sendOptions.acks = node.sendOptions.acks;
-                sendOptions.timeout = node.sendOptions.timeout;
+                if(msg.payload){
 
-                sendOptions.messages = []
-                var message = new Object();
-                
-                if(node.sendOptions.key || msg.key){
-                    message.key = node.sendOptions.key || msg.key;
+                    var sendOptions = new Object();
+
+                    sendOptions.topic = node.sendOptions.topic || msg.topic || null;
+                    sendOptions.acks = node.sendOptions.acks || null;
+                    sendOptions.timeout = node.sendOptions.timeout || null;
+
+                    sendOptions.messages = [];
+                    var message = new Object();
+                    
+                    message.key = node.sendOptions.key || msg.key || null;
+                    
+                    message.headers = node.sendOptions.headers;
+                    message.headers = Object.keys(message.headers).length === 0 ? msg.headers : message.headers;
+                    
+                    message.partition = node.sendOptions.partition || msg.partition || null;
+                    
+                    message.value = msg.payload;
+    
+                    sendOptions.messages.push(message);
+
+                    node.warn(sendOptions);
+                    
+                    node.producer.send(sendOptions).catch((e)=>{
+                        node.error(e.message);
+                        node.status({fill:"red",shape:"ring",text:"Error"});
+                    })
+    
+                    node.lastMessageTime = new Date().getTime();
+                    node.status({fill:"blue",shape:"ring",text:"Sending"});
                 }
-
-                if(Object.keys(node.sendOptions.headers).length != 0 || msg.headers){
-                    message.headers =  Object.keys(node.sendOptions.headers).length != 0 ? node.sendOptions.headers : msg.headers;
-                }
-
-                if(node.sendOptions.partition || msg.partition){
-                    message.partition = node.sendOptions.partition || msg.partition;
-                }
-
-                message.value = msg.payload;
-
-                sendOptions.messages.push(message);
-                
-                node.producer.send(sendOptions).catch((e)=>{
-                    node.error(e.message);
-                    node.status({fill:"red",shape:"ring",text:"Error"});
-                })
-
-                node.lastMessageTime = new Date().getTime();
-                node.status({fill:"blue",shape:"ring",text:"Sending"});
             }    
         });
 
