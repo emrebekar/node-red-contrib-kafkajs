@@ -102,10 +102,8 @@ module.exports = function(RED) {
     
                     sendOptions.messages.push(message);
 
-                    node.warn(sendOptions);
-                    
                     node.producer.send(sendOptions).catch((e)=>{
-                        node.error(e.message);
+                        node.error("Kafka Producer Error", e);
                         node.status({fill:"red",shape:"ring",text:"Error"});
                     })
     

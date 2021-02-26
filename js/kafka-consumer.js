@@ -67,7 +67,7 @@ module.exports = function(RED) {
             }
 
             node.onError = function (e){
-                node.error(e.message);
+                node.error("Kafka Consumer Error", e.message);
                 node.status({fill:"red",shape:"ring",text:"Error"});
             }
     
