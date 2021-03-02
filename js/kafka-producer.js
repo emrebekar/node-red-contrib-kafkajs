@@ -30,7 +30,7 @@ module.exports = function(RED) {
         
         sendOptions.partition = config.partition || null;
         sendOptions.key = config.key || null;
-        sendOptions.headers = config.headeritems;
+        sendOptions.headers = config.headeritems || {};
         
         sendOptions.acks = acksDict[config.acknowledge];
         sendOptions.timeout = config.responsetimeout;
