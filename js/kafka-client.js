@@ -39,21 +39,21 @@ module.exports = function(RED) {
             options.ssl.rejectUnauthorized = config.tlsselfsign;
         }
 
-        else if(config.auth == 'saslplain'){
-            options.ssl = config.saslplainssl;
+        else if(config.auth == 'sasl'){
+            options.ssl = config.saslssl;
 
             options.sasl = new Object();
-            options.sasl.mechanism = 'plain';
-            options.sasl.username = node.credentials.saslplainusername;
-            options.sasl.password = node.credentials.saslplainpassword;
+            options.sasl.mechanism = config.saslmechanism || 'plain';
+            options.sasl.username = node.credentials.saslusername;
+            options.sasl.password = node.credentials.saslpassword;
         }
     
         node.options = options;
     }
     RED.nodes.registerType("kafkajs-client",KafkajsClientNode, {
         credentials: {
-			saslplainusername: {type:"text"},
-			saslplainpassword: {type:"password"}
+			saslusername: {type:"text"},
+			saslpassword: {type:"password"}
 		}
     });
 }

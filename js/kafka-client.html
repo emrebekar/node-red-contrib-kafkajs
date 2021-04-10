@@ -40,7 +40,7 @@
         <select id="node-config-input-auth">            
 			<option value="none">NONE</option>
 			<option value="tls">TLS</option>
-			<option value="saslplain">SASL/PLAIN</option>
+			<option value="sasl">SASL</option>
 		</select>
 	</div>
 	<div id="node-config-tls" class="form-row" style="margin-left:30px">
@@ -70,18 +70,26 @@
 			<label for="node-config-input-tlsselfsign" style="width: auto">Self Sign</label>
 		</div>
 	</div>
-	<div id="node-config-saslplain" class="form-row" style="margin-left:30px">
+	<div id="node-config-sasl" class="form-row" style="margin-left:30px">
 		<div class="form-row">
-			<label for="node-config-input-saslplainusername"><i class="fa fa-id-card-o"></i> Username</label>
-			<input  id="node-config-input-saslplainusername" type="text" placeholder="Username" >
+			<label for="node-config-input-saslmechanism"><i class="fa fa-lock"></i> Mechanism</label>
+			<select id="node-config-input-saslmechanism">            
+				<option value="plain">PLAIN</option>
+				<option value="scram-sha-256">SCRAM-SHA-256</option>
+				<option value="scram-sha-512">SCRAM-SHA-512</option>
+			</select>
 		</div>
 		<div class="form-row">
-			<label for="node-config-input-saslplainpassword"><i class="fa fa-key"></i> Password</label>
-			<input  id="node-config-input-saslplainpassword" type="password" placeholder="Password" >
+			<label for="node-config-input-saslusername"><i class="fa fa-id-card-o"></i> Username</label>
+			<input  id="node-config-input-saslusername" type="text" placeholder="Username" >
 		</div>
 		<div class="form-row">
-			<input type="checkbox" id="node-config-input-saslplainssl" style="display: inline-block; width: auto; vertical-align: top;">
-			<label for="node-config-input-saslplainssl" style="width: auto">Use SSL</label>
+			<label for="node-config-input-saslpassword"><i class="fa fa-key"></i> Password</label>
+			<input  id="node-config-input-saslpassword" type="password" placeholder="Password" >
+		</div>
+		<div class="form-row">
+			<input type="checkbox" id="node-config-input-saslssl" style="display: inline-block; width: auto; vertical-align: top;">
+			<label for="node-config-input-saslssl" style="width: auto">Use SSL</label>
 		</div>
 	</div>
 	<div class="form-row">
@@ -113,85 +121,86 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('kafkajs-client',{
-        category: 'config',
-        icon: "setting.png",
-        defaults: {
-        	name: {required:false},
-			brokers: {value: [], required: true},
-			clientid: {required: true},
-			connectiontimeout: {value: 3000, required: true},
-			requesttimeout: {value: 25000, required: true},
-			
-			advancedretry:{value: false, required:true},
-			maxretrytime: {value:30000, required: true},
-			initialretrytime: {value:300, required: true},
-			factor: {value:0.2, required: true},
-			multiplier: {value:2, required: true},
-			retries: {value:5, required: true},
+	RED.nodes.registerType('kafkajs-client', {
+		category: 'config',
+		icon: "setting.png",
+		defaults: {
+			name: { required: false },
+			brokers: { value: [], required: true },
+			clientid: { required: true },
+			connectiontimeout: { value: 3000, required: true },
+			requesttimeout: { value: 25000, required: true },
 
-			auth: {value:"none", required:true},
-			
-			tlsselfsign: {value: false, required: false},
-			tlscacert: {required:false},
-			tlsclientcert: {required:false},
-			tlsprivatekey: {required:false},
-			tlspassphrase: {required:false},
+			advancedretry: { value: false, required: true },
+			maxretrytime: { value: 30000, required: true },
+			initialretrytime: { value: 300, required: true },
+			factor: { value: 0.2, required: true },
+			multiplier: { value: 2, required: true },
+			retries: { value: 5, required: true },
 
-			saslplainssl: {value:true, required:false},
+			auth: { value: "none", required: true },
 
-			loglevel: {value:"error", required:true},
+			tlsselfsign: { value: false, required: false },
+			tlscacert: { required: false },
+			tlsclientcert: { required: false },
+			tlsprivatekey: { required: false },
+			tlspassphrase: { required: false },
+
+			saslssl: { value: true, required: false },
+			saslmechanism: { value: 'plain', required: false },
+
+			loglevel: { value: "error", required: true },
 		},
 		credentials: {
-			saslplainusername: { type: "text", required: false },
-			saslplainpassword: { type: "password", required: false }
+			saslusername: { type: "text", required: false },
+			saslpassword: { type: "password", required: false }
 		},
 
-        label: function() {
-            return this.name||this._("kafkajs-client");
+		label: function () {
+			return this.name || this._("kafkajs-client");
 		},
-		
-        labelStyle: function() {
-            return "node_label_italic";
+
+		labelStyle: function () {
+			return "node_label_italic";
 		},
-		
-  	    oneditprepare: function() {
-			function checkAdvancedRetry(checked){
-				if(checked){
+
+		oneditprepare: function () {
+			function checkAdvancedRetry(checked) {
+				if (checked) {
 					$("#node-config-advancedretry").show();
 				}
-				else{
+				else {
 					$("#node-config-advancedretry").hide();
 				}
 			}
 
-			function checkAuthMethod(val){
-				if(val == "tls"){
-					$("#node-config-saslplain").hide();
+			function checkAuthMethod(val) {
+				if (val == "tls") {
+					$("#node-config-sasl").hide();
 					$("#node-config-tls").show();
 				}
-				else if(val == "saslplain"){
+				else if (val == "sasl") {
 					$("#node-config-tls").hide();
-					$("#node-config-saslplain").show();
+					$("#node-config-sasl").show();
 				}
-				else{
-					$("#node-config-saslplain").hide();
+				else {
+					$("#node-config-sasl").hide();
 					$("#node-config-tls").hide();
 				}
 			}
 
 			checkAuthMethod($("#node-config-input-auth").val());
 			checkAdvancedRetry($("#node-config-input-advancedretry").is(':checked'));
-			
-			$('#node-config-input-advancedretry').change(function(){
+
+			$('#node-config-input-advancedretry').change(function () {
 				checkAdvancedRetry($(this).is(':checked'));
 			})
 
-			$("#node-config-input-auth").change(function(){
+			$("#node-config-input-auth").change(function () {
 				checkAuthMethod($(this).val());
 			});
-  		},
-  		oneditsave: function() {
-        }
-    });
+		},
+		oneditsave: function () {
+		}
+	});
 </script>
