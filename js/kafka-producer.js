@@ -62,7 +62,11 @@ module.exports = function(RED) {
             producer.on(producer.events.DISCONNECT, node.onDisconnect);
             producer.on(producer.events.REQUEST_TIMEOUT, node.onRequestTimeout);
 
-            await producer.connect();   
+            try {
+                await producer.connect();
+            } catch (err) {
+                node.error("Kafka Producer Connect Error", err);
+            }
         }
 
         node.init();
