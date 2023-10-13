@@ -70,6 +70,10 @@
             <input type="checkbox" id="node-input-allowautotopiccreation">
         </div>
         <div class="form-row">
+            <label for="node-input-allowbinaryvaluepayload"><i class="fa fa-tag"></i> Allow Auto Topic Creation</label>
+            <input type="checkbox" id="node-input-allowbinaryvaluepayload">
+        </div>
+        <div class="form-row">
             <label for="node-input-clearoffsets"><i class="fa fa-eraser"></i> Clear Offsets</label>
             <input type="checkbox" id="node-input-clearoffsets">
         </div>
@@ -101,7 +105,8 @@
             maxwaittimeinms: {value: 5000, required:true},
             frombeginning: {value: false, required:true},
             clearoffsets: {value: false, required:true},
-            allowautotopiccreation: {value:false, required:true}
+            allowautotopiccreation: {value:false, required:true},
+            allowbinaryvaluepayload: {value: false, required:true}
         },
         inputs:0,
         outputs:1,

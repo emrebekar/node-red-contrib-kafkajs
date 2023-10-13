@@ -30,7 +30,7 @@ module.exports = function(RED) {
             options.retry.retries =  parseInt(config.retries);
         }
 
-        if(config.auth == 'tls'){
+        if(config.auth === 'tls'){
             options.ssl = new Object();
             options.ssl.ca = [fs.readFileSync(config.tlscacert, 'utf-8')];
             options.ssl.cert = fs.readFileSync(config.tlsclientcert, 'utf-8');
@@ -39,7 +39,7 @@ module.exports = function(RED) {
             options.ssl.rejectUnauthorized = config.tlsselfsign;
         }
 
-        else if(config.auth == 'sasl'){
+        else if(config.auth === 'sasl'){
             options.ssl = config.saslssl;
 
             options.sasl = new Object();
